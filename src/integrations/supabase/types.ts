@@ -9,7 +9,159 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      categories: {
+        Row: {
+          color_class: string | null
+          created_at: string
+          id: string
+          is_active: boolean | null
+          name: string
+          name_en: string
+        }
+        Insert: {
+          color_class?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          name_en: string
+        }
+        Update: {
+          color_class?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          name_en?: string
+        }
+        Relationships: []
+      }
+      order_items: {
+        Row: {
+          created_at: string
+          id: string
+          order_id: string
+          product_id: string
+          product_name: string
+          product_price: number
+          quantity: number
+          total_price: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          order_id: string
+          product_id: string
+          product_name: string
+          product_price: number
+          quantity: number
+          total_price: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          order_id?: string
+          product_id?: string
+          product_name?: string
+          product_price?: number
+          quantity?: number
+          total_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          created_at: string
+          customer_address: string
+          customer_name: string
+          customer_phone: string
+          id: string
+          notes: string | null
+          status: string | null
+          total_amount: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_address: string
+          customer_name: string
+          customer_phone: string
+          id?: string
+          notes?: string | null
+          status?: string | null
+          total_amount: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_address?: string
+          customer_name?: string
+          customer_phone?: string
+          id?: string
+          notes?: string | null
+          status?: string | null
+          total_amount?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          discount: number | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          name: string
+          price: number
+          stock_quantity: number | null
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          discount?: number | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          name: string
+          price: number
+          stock_quantity?: number | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          discount?: number | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          name?: string
+          price?: number
+          stock_quantity?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
