@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -7,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/hooks/use-toast';
 import BottomNavigation from '@/components/BottomNavigation';
-import { ShoppingCart, Plus, Search, Settings } from 'lucide-react';
+import { ShoppingCart, Plus, Search, Settings, Leaf, Star } from 'lucide-react';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -17,11 +16,11 @@ const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const categories = [
-    { id: 'all', name: 'الكل', color: 'bg-blue-500' },
-    { id: 'kitchen', name: 'مطبخ', color: 'bg-green-500' },
-    { id: 'bathroom', name: 'حمام', color: 'bg-purple-500' },
-    { id: 'floors', name: 'أرضيات', color: 'bg-orange-500' },
-    { id: 'laundry', name: 'غسيل', color: 'bg-pink-500' },
+    { id: 'all', name: 'الكل', color: 'bg-gradient-to-r from-emerald-500 to-teal-500' },
+    { id: 'kitchen', name: 'مطبخ', color: 'bg-gradient-to-r from-green-500 to-emerald-500' },
+    { id: 'bathroom', name: 'حمام', color: 'bg-gradient-to-r from-teal-500 to-cyan-500' },
+    { id: 'floors', name: 'أرضيات', color: 'bg-gradient-to-r from-blue-500 to-teal-500' },
+    { id: 'laundry', name: 'غسيل', color: 'bg-gradient-to-r from-cyan-500 to-blue-500' },
   ];
 
   const products = [
@@ -109,17 +108,20 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
-      {/* Header */}
-      <div className="gradient-bg text-white p-4 sticky top-0 z-10 shadow-lg">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50 pb-20">
+      {/* Enhanced Header */}
+      <div className="bg-gradient-to-r from-emerald-500 via-teal-500 to-green-500 text-white p-4 sticky top-0 z-10 shadow-xl">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-              <ShoppingCart className="w-5 h-5" />
+            <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/30">
+              <Leaf className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold">متجر النظافة</h1>
-              <p className="text-sm text-white/80">أفضل المنظفات</p>
+              <div className="flex items-center gap-2">
+                <h1 className="text-2xl font-bold">Harvest</h1>
+                <Star className="w-5 h-5 text-yellow-300" />
+              </div>
+              <p className="text-sm text-white/90">المنظفات الطبيعية</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -127,20 +129,20 @@ const Home = () => {
               onClick={checkAdminAccess}
               variant="ghost"
               size="sm"
-              className="text-white hover:bg-white/20"
+              className="text-white hover:bg-white/20 rounded-xl"
             >
-              <Settings className="w-4 h-4" />
+              <Settings className="w-5 h-5" />
             </Button>
             <div className="relative">
               <Button
                 onClick={() => navigate('/cart')}
                 variant="ghost"
                 size="sm"
-                className="text-white hover:bg-white/20"
+                className="text-white hover:bg-white/20 rounded-xl"
               >
                 <ShoppingCart className="w-5 h-5" />
                 {getTotalItems() > 0 && (
-                  <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center text-xs bg-red-500">
+                  <Badge className="absolute -top-2 -right-2 h-6 w-6 flex items-center justify-center text-xs bg-red-500 border-2 border-white animate-pulse">
                     {getTotalItems()}
                   </Badge>
                 )}
@@ -149,29 +151,33 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Search */}
+        {/* Enhanced Search */}
         <div className="relative">
-          <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-green-600 w-5 h-5" />
           <input
             type="text"
-            placeholder="ابحث عن المنتجات..."
+            placeholder="ابحث في منتجات Harvest..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg pr-10 pl-4 py-2 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50"
+            className="w-full bg-white/95 backdrop-blur-sm border-2 border-white/50 rounded-2xl pr-12 pl-4 py-3 text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white focus:border-white shadow-lg"
           />
         </div>
       </div>
 
-      {/* Categories */}
+      {/* Enhanced Categories */}
       <div className="p-4">
-        <div className="flex gap-2 overflow-x-auto pb-2">
+        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
           {categories.map((category) => (
             <Button
               key={category.id}
               onClick={() => setSelectedCategory(category.name)}
               variant={selectedCategory === category.name ? "default" : "outline"}
               size="sm"
-              className={`flex-shrink-0 ${selectedCategory === category.name ? category.color : ''}`}
+              className={`flex-shrink-0 px-6 py-3 rounded-2xl font-bold text-sm transition-all duration-300 transform hover:scale-105 ${
+                selectedCategory === category.name 
+                  ? `${category.color} text-white shadow-lg border-0` 
+                  : 'bg-white/80 text-gray-700 border-2 border-emerald-200 hover:bg-emerald-50'
+              }`}
             >
               {category.name}
             </Button>
@@ -179,38 +185,41 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Products Grid */}
+      {/* Enhanced Products Grid */}
       <div className="px-4 pb-4">
         <div className="grid grid-cols-2 gap-4">
           {filteredProducts.map((product) => (
-            <Card key={product.id} className="overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+            <Card key={product.id} className="overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 bg-white/95 backdrop-blur-sm border-2 border-emerald-100 rounded-3xl">
               <div className="relative">
                 <img 
                   src={product.image} 
                   alt={product.name}
-                  className="w-full h-40 object-cover"
+                  className="w-full h-44 object-cover"
                 />
                 {product.discount > 0 && (
-                  <Badge className="absolute top-2 left-2 bg-red-500 text-white">
+                  <Badge className="absolute top-3 left-3 bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1 rounded-2xl font-bold animate-pulse shadow-lg">
                     خصم {product.discount}%
                   </Badge>
                 )}
+                <div className="absolute top-3 right-3 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
+                  <Leaf className="w-4 h-4 text-green-600" />
+                </div>
               </div>
-              <CardContent className="p-3">
-                <h3 className="font-semibold text-sm mb-2 line-clamp-2">{product.name}</h3>
-                <div className="flex items-center justify-between mb-3">
+              <CardContent className="p-4">
+                <h3 className="font-bold text-sm mb-3 line-clamp-2 text-gray-800">{product.name}</h3>
+                <div className="flex items-center justify-between mb-4">
                   <div className="flex flex-col">
                     {product.discount > 0 ? (
                       <>
-                        <span className="text-lg font-bold text-green-600">
+                        <span className="text-xl font-bold text-emerald-600">
                           {(product.price * (1 - product.discount / 100)).toFixed(0)} ج.م
                         </span>
-                        <span className="text-sm text-gray-500 line-through">
+                        <span className="text-sm text-gray-400 line-through">
                           {product.price} ج.م
                         </span>
                       </>
                     ) : (
-                      <span className="text-lg font-bold text-blue-600">
+                      <span className="text-xl font-bold text-emerald-600">
                         {product.price} ج.م
                       </span>
                     )}
@@ -218,7 +227,7 @@ const Home = () => {
                 </div>
                 <Button
                   onClick={() => handleAddToCart(product)}
-                  className="w-full gradient-green text-white hover:opacity-90 transition-opacity"
+                  className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold py-3 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg"
                   size="sm"
                 >
                   <Plus className="w-4 h-4 ml-1" />
