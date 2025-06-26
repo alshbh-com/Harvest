@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -297,71 +296,69 @@ const Home = () => {
             <p className="text-white/70 text-lg">جرب البحث بكلمات أخرى أو اختر فئة مختلفة</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 gap-4">
             {filteredProducts.map((product) => (
               <Card key={product.id} className="group overflow-hidden bg-white/95 backdrop-blur-xl border-2 border-white/20 rounded-3xl shadow-2xl hover:shadow-purple-500/25 transition-all duration-500 transform hover:-translate-y-3 hover:scale-105">
                 <div className="relative overflow-hidden">
                   <img 
                     src={product.image_url || 'https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=400&h=300&fit=crop'} 
                     alt={product.name}
-                    className="w-full h-48 object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-32 object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   
                   {product.discount > 0 && (
-                    <Badge className="absolute top-4 left-4 bg-gradient-to-r from-red-500 to-pink-600 text-white px-4 py-2 rounded-2xl font-bold text-sm shadow-lg animate-pulse border-2 border-white">
-                      🔥 خصم {product.discount}%
+                    <Badge className="absolute top-2 left-2 bg-gradient-to-r from-red-500 to-pink-600 text-white px-2 py-1 rounded-xl font-bold text-xs shadow-lg animate-pulse border border-white">
+                      🔥 {product.discount}%
                     </Badge>
                   )}
                   
-                  <div className="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-xl rounded-full flex items-center justify-center shadow-lg border border-white/50">
-                    <Leaf className="w-5 h-5 text-green-600" />
+                  <div className="absolute top-2 right-2 w-6 h-6 bg-white/90 backdrop-blur-xl rounded-full flex items-center justify-center shadow-lg border border-white/50">
+                    <Leaf className="w-3 h-3 text-green-600" />
                   </div>
                   
-                  <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
-                      <Star className="w-4 h-4 text-white fill-current" />
+                  <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="w-6 h-6 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
+                      <Star className="w-3 h-3 text-white fill-current" />
                     </div>
                   </div>
                 </div>
                 
-                <CardContent className="p-6">
-                  <h3 className="font-bold text-lg mb-3 text-gray-800 line-clamp-2 group-hover:text-purple-700 transition-colors duration-300">
+                <CardContent className="p-4">
+                  <h3 className="font-bold text-sm mb-2 text-gray-800 line-clamp-2 group-hover:text-purple-700 transition-colors duration-300">
                     {product.name}
                   </h3>
                   
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between mb-3">
                     <div className="flex flex-col">
                       {product.discount > 0 ? (
                         <>
-                          <span className="text-2xl font-black bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                          <span className="text-lg font-black bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                             {(product.price * (1 - product.discount / 100)).toFixed(0)} ج.م
                           </span>
-                          <span className="text-sm text-gray-400 line-through font-medium">
+                          <span className="text-xs text-gray-400 line-through font-medium">
                             {product.price} ج.م
                           </span>
                         </>
                       ) : (
-                        <span className="text-2xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                        <span className="text-lg font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                           {product.price} ج.م
                         </span>
                       )}
                     </div>
                     <div className="flex gap-1">
-                      <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                      <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                      <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                      <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                      <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-2 h-2 text-yellow-400 fill-current" />
+                      ))}
                     </div>
                   </div>
                   
                   <Button
                     onClick={() => handleAddToCart(product)}
-                    className="w-full bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 hover:from-purple-700 hover:via-pink-700 hover:to-red-700 text-white font-bold py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-purple-500/50 border-2 border-white/20"
-                    size="lg"
+                    className="w-full bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 hover:from-purple-700 hover:via-pink-700 hover:to-red-700 text-white font-bold py-2 px-3 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-purple-500/50 border border-white/20 text-xs"
+                    size="sm"
                   >
-                    <Plus className="w-5 h-5 ml-2" />
+                    <Plus className="w-3 h-3 ml-1" />
                     ✨ إضافة للسلة
                   </Button>
                 </CardContent>
