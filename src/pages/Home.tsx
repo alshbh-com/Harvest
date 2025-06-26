@@ -134,8 +134,45 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pb-20 relative overflow-hidden">
-      {/* خلفية متحركة */}
-      <div className="absolute inset-0 overflow-hidden">
+      {/* الإضاءة السينمائية الجانبية */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        {/* إضاءة الجانب الأيمن */}
+        <div className="absolute top-0 right-0 w-1/3 h-full">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-l from-cyan-400/30 via-blue-500/20 to-transparent rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute top-1/4 right-0 w-80 h-80 bg-gradient-to-l from-purple-400/25 via-pink-500/15 to-transparent rounded-full blur-2xl animate-bounce" style={{animationDuration: '4s'}}></div>
+          <div className="absolute top-1/2 right-0 w-72 h-72 bg-gradient-to-l from-indigo-400/35 via-violet-500/20 to-transparent rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
+          <div className="absolute bottom-0 right-0 w-88 h-88 bg-gradient-to-l from-teal-400/20 via-cyan-500/15 to-transparent rounded-full blur-3xl animate-bounce" style={{animationDuration: '5s'}}></div>
+          
+          {/* أشعة ضوئية منحنية */}
+          <div className="absolute top-1/3 right-0 w-full h-2 bg-gradient-to-l from-white/40 via-cyan-300/30 to-transparent blur-sm animate-pulse opacity-60"></div>
+          <div className="absolute top-2/3 right-0 w-full h-1 bg-gradient-to-l from-white/30 via-purple-300/20 to-transparent blur-sm animate-pulse opacity-50" style={{animationDelay: '2s'}}></div>
+        </div>
+
+        {/* إضاءة الجانب الأيسر */}
+        <div className="absolute top-0 left-0 w-1/3 h-full">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-r from-orange-400/25 via-red-500/15 to-transparent rounded-full blur-3xl animate-pulse" style={{animationDelay: '1.5s'}}></div>
+          <div className="absolute top-1/3 left-0 w-80 h-80 bg-gradient-to-r from-pink-400/30 via-rose-500/20 to-transparent rounded-full blur-2xl animate-bounce" style={{animationDuration: '6s'}}></div>
+          <div className="absolute top-2/3 left-0 w-72 h-72 bg-gradient-to-r from-yellow-400/20 via-amber-500/15 to-transparent rounded-full blur-3xl animate-pulse" style={{animationDelay: '0.5s'}}></div>
+          <div className="absolute bottom-1/4 left-0 w-88 h-88 bg-gradient-to-r from-emerald-400/25 via-green-500/15 to-transparent rounded-full blur-3xl animate-bounce" style={{animationDuration: '7s'}}></div>
+          
+          {/* أشعة ضوئية منحنية */}
+          <div className="absolute top-1/4 left-0 w-full h-2 bg-gradient-to-r from-white/35 via-orange-300/25 to-transparent blur-sm animate-pulse opacity-70" style={{animationDelay: '1s'}}></div>
+          <div className="absolute top-3/4 left-0 w-full h-1 bg-gradient-to-r from-white/25 via-pink-300/20 to-transparent blur-sm animate-pulse opacity-60" style={{animationDelay: '3s'}}></div>
+        </div>
+
+        {/* فلاشات ضوئية متقطعة - Lens Flares */}
+        <div className="absolute top-1/5 right-10 w-4 h-4 bg-white/60 rounded-full blur-sm animate-ping opacity-75"></div>
+        <div className="absolute top-2/5 left-16 w-3 h-3 bg-cyan-300/70 rounded-full blur-sm animate-ping opacity-60" style={{animationDelay: '1.5s'}}></div>
+        <div className="absolute top-3/5 right-20 w-2 h-2 bg-purple-300/80 rounded-full blur-sm animate-ping opacity-50" style={{animationDelay: '2.5s'}}></div>
+        <div className="absolute bottom-1/4 left-12 w-3 h-3 bg-pink-300/60 rounded-full blur-sm animate-ping opacity-70" style={{animationDelay: '3.5s'}}></div>
+
+        {/* خطوط ضوئية مائلة */}
+        <div className="absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-white/20 to-transparent opacity-30 transform rotate-12 animate-pulse"></div>
+        <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-white/15 to-transparent opacity-25 transform -rotate-12 animate-pulse" style={{animationDelay: '2s'}}></div>
+      </div>
+
+      {/* خلفية متحركة أساسية */}
+      <div className="absolute inset-0 overflow-hidden z-0">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-pink-500/20 to-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-blue-500/20 to-cyan-500/20 rounded-full blur-3xl animate-bounce"></div>
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl animate-spin" style={{animationDuration: '20s'}}></div>
