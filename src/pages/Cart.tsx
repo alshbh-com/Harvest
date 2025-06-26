@@ -30,7 +30,30 @@ const Cart = () => {
     setOrderData(prev => ({ ...prev, [field]: value }));
   };
 
+  const validateOrderData = () => {
+    const errors = [];
+    
+    if (!orderData.customerName.trim()) {
+      errors.push("الاسم الكامل مطلوب");
+    }
+    
+    if (!orderData.customerPhone.trim()) {
+      errors.push("رقم الهاتف مطلوب");
+    } else if (orderData.customerPhone.length < 10) {
+      errors.push("رقم الهاتف يجب أن يكون صحيحاً");
+    }
+    
+    if (!orderData.customerAddress.trim()) {
+      errors.push("العنوان مطلوب");
+    }
+    
+    return errors;
+  };
+
   const handleSubmitOrder = async () => {
+    console.log('Starting order submission...', { items, orderData });
+    
+    // التحقق من وجود منتجات في السلة
     if (items.length === 0) {
       toast({
         title: "السلة فارغة",
@@ -40,10 +63,12 @@ const Cart = () => {
       return;
     }
 
-    if (!orderData.customerName || !orderData.customerPhone || !orderData.customerAddress) {
+    // التحقق من صحة البيانات
+    const validationErrors = validateOrderData();
+    if (validationErrors.length > 0) {
       toast({
-        title: "بيانات ناقصة",
-        description: "يرجى ملء جميع البيانات المطلوبة",
+        title: "بيانات ناقصة أو غير صحيحة",
+        description: validationErrors.join("\n"),
         variant: "destructive"
       });
       return;
@@ -52,40 +77,61 @@ const Cart = () => {
     setIsSubmitting(true);
 
     try {
+      console.log('Creating order with data:', {
+        customer_name: orderData.customerName.trim(),
+        customer_phone: orderData.customerPhone.trim(),
+        customer_address: orderData.customerAddress.trim(),
+        notes: orderData.notes.trim(),
+        total_amount: getTotalPrice(),
+        status: 'pending'
+      });
+
       // إنشاء الطلب
       const { data: order, error: orderError } = await supabase
         .from('orders')
         .insert({
-          customer_name: orderData.customerName,
-          customer_phone: orderData.customerPhone,
-          customer_address: orderData.customerAddress,
-          notes: orderData.notes,
+          customer_name: orderData.customerName.trim(),
+          customer_phone: orderData.customerPhone.trim(),
+          customer_address: orderData.customerAddress.trim(),
+          notes: orderData.notes.trim() || null,
           total_amount: getTotalPrice(),
           status: 'pending'
         })
         .select()
         .single();
 
-      if (orderError) throw orderError;
+      if (orderError) {
+        console.error('Order creation error:', orderError);
+        throw new Error(`خطأ في إنشاء الطلب: ${orderError.message}`);
+      }
+
+      console.log('Order created successfully:', order);
 
       // إضافة عناصر الطلب
       const orderItems = items.map(item => ({
         order_id: order.id,
         product_id: item.id,
         product_name: item.name,
-        product_price: item.price,
-        quantity: item.quantity,
-        total_price: item.price * item.quantity
+        product_price: Number(item.price),
+        quantity: Number(item.quantity),
+        total_price: Number(item.price) * Number(item.quantity)
       }));
+
+      console.log('Creating order items:', orderItems);
 
       const { error: itemsError } = await supabase
         .from('order_items')
         .insert(orderItems);
 
-      if (itemsError) throw itemsError;
+      if (itemsError) {
+        console.error('Order items creation error:', itemsError);
+        throw new Error(`خطأ في إضافة عناصر الطلب: ${itemsError.message}`);
+      }
+
+      console.log('Order items created successfully');
 
       toast({
-        title: "تم إرسال الطلب بنجاح!",
+        title: "تم إرسال الطلب بنجاح! 🎉",
         description: `رقم الطلب: ${order.id.substring(0, 8)}... سيتم التواصل معك قريباً`,
       });
 
@@ -93,9 +139,16 @@ const Cart = () => {
       navigate('/home');
     } catch (error) {
       console.error('Error submitting order:', error);
+      
+      let errorMessage = "حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى";
+      
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      
       toast({
         title: "خطأ في إرسال الطلب",
-        description: "حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى",
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {
@@ -218,6 +271,7 @@ const Cart = () => {
                 value={orderData.customerName}
                 onChange={(e) => handleInputChange('customerName', e.target.value)}
                 placeholder="أدخل اسمك الكامل"
+                className={!orderData.customerName.trim() ? 'border-red-300' : ''}
               />
             </div>
             
@@ -229,6 +283,7 @@ const Cart = () => {
                 onChange={(e) => handleInputChange('customerPhone', e.target.value)}
                 placeholder="أدخل رقم هاتفك"
                 dir="ltr"
+                className={!orderData.customerPhone.trim() ? 'border-red-300' : ''}
               />
             </div>
             
@@ -239,6 +294,7 @@ const Cart = () => {
                 value={orderData.customerAddress}
                 onChange={(e) => handleInputChange('customerAddress', e.target.value)}
                 placeholder="أدخل عنوانك بالتفصيل"
+                className={!orderData.customerAddress.trim() ? 'border-red-300' : ''}
               />
             </div>
             
@@ -264,8 +320,8 @@ const Cart = () => {
             </div>
             <Button
               onClick={handleSubmitOrder}
-              disabled={isSubmitting}
-              className="w-full gradient-green text-white py-3 rounded-xl font-bold text-lg"
+              disabled={isSubmitting || items.length === 0}
+              className="w-full gradient-green text-white py-3 rounded-xl font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <div className="flex items-center justify-center gap-2">
