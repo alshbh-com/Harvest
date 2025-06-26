@@ -36,6 +36,39 @@ export type Database = {
         }
         Relationships: []
       }
+      offers: {
+        Row: {
+          created_at: string
+          description: string | null
+          discount: number
+          id: string
+          is_active: boolean | null
+          title: string
+          updated_at: string
+          valid_until: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          discount: number
+          id?: string
+          is_active?: boolean | null
+          title: string
+          updated_at?: string
+          valid_until?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          discount?: number
+          id?: string
+          is_active?: boolean | null
+          title?: string
+          updated_at?: string
+          valid_until?: string | null
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           created_at: string
@@ -159,6 +192,30 @@ export type Database = {
           price?: number
           stock_quantity?: number | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      store_settings: {
+        Row: {
+          created_at: string
+          id: string
+          store_name: string
+          updated_at: string
+          welcome_image_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          store_name?: string
+          updated_at?: string
+          welcome_image_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          store_name?: string
+          updated_at?: string
+          welcome_image_url?: string | null
         }
         Relationships: []
       }
