@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -26,6 +25,9 @@ const Cart = () => {
     notes: ''
   });
 
+  // رقم الواتساب للإدمن - يمكن تغييره حسب الحاجة
+  const ADMIN_WHATSAPP = "201234567890"; // ضع رقم الواتساب الخاص بالإدمن هنا
+
   const handleInputChange = (field: string, value: string) => {
     setOrderData(prev => ({ ...prev, [field]: value }));
   };
@@ -48,6 +50,38 @@ const Cart = () => {
     }
     
     return errors;
+  };
+
+  const formatWhatsAppMessage = (orderId: string) => {
+    let message = `🛍️ *طلب جديد*\n\n`;
+    message += `📝 *رقم الطلب:* ${orderId.substring(0, 8)}\n`;
+    message += `👤 *اسم العميل:* ${orderData.customerName}\n`;
+    message += `📱 *رقم الهاتف:* ${orderData.customerPhone}\n`;
+    message += `📍 *العنوان:* ${orderData.customerAddress}\n`;
+    
+    if (orderData.notes.trim()) {
+      message += `📋 *ملاحظات:* ${orderData.notes}\n`;
+    }
+    
+    message += `\n🛒 *المنتجات المطلوبة:*\n`;
+    
+    items.forEach((item, index) => {
+      message += `${index + 1}. ${item.name}\n`;
+      message += `   الكمية: ${item.quantity}\n`;
+      message += `   السعر: ${item.price} ج.م\n`;
+      message += `   الإجمالي: ${item.price * item.quantity} ج.م\n\n`;
+    });
+    
+    message += `💰 *إجمالي الطلب: ${getTotalPrice()} ج.م*\n`;
+    message += `⏰ *وقت الطلب:* ${new Date().toLocaleString('ar-EG')}`;
+    
+    return encodeURIComponent(message);
+  };
+
+  const sendToWhatsApp = (orderId: string) => {
+    const message = formatWhatsAppMessage(orderId);
+    const whatsappURL = `https://wa.me/${ADMIN_WHATSAPP}?text=${message}`;
+    window.open(whatsappURL, '_blank');
   };
 
   const handleSubmitOrder = async () => {
@@ -77,14 +111,7 @@ const Cart = () => {
     setIsSubmitting(true);
 
     try {
-      console.log('Creating order with data:', {
-        customer_name: orderData.customerName.trim(),
-        customer_phone: orderData.customerPhone.trim(),
-        customer_address: orderData.customerAddress.trim(),
-        notes: orderData.notes.trim(),
-        total_amount: getTotalPrice(),
-        status: 'pending'
-      });
+      console.log('Creating order with data:', orderData);
 
       // إنشاء الطلب
       const { data: order, error: orderError } = await supabase
@@ -135,9 +162,12 @@ const Cart = () => {
 
       console.log('Order items created successfully');
 
+      // إرسال الطلب للواتساب
+      sendToWhatsApp(order.id);
+
       toast({
         title: "تم إرسال الطلب بنجاح! 🎉",
-        description: `رقم الطلب: ${order.id.substring(0, 8)}... سيتم التواصل معك قريباً`,
+        description: `تم توجيهك للواتساب لإتمام الطلب مع الإدمن`,
       });
 
       clearCart();
@@ -334,7 +364,7 @@ const Cart = () => {
                   <span>جاري إرسال الطلب...</span>
                 </div>
               ) : (
-                'تأكيد الطلب'
+                'إرسال الطلب للواتساب'
               )}
             </Button>
           </CardContent>
