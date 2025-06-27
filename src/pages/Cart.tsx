@@ -25,8 +25,8 @@ const Cart = () => {
     notes: ''
   });
 
-  // رقم الواتساب للإدمن - يمكن تغييره حسب الحاجة
-  const ADMIN_WHATSAPP = "201234567890"; // ضع رقم الواتساب الخاص بالإدمن هنا
+  // رقم الواتساب للإدمن - تم تحديثه للرقم المطلوب
+  const ADMIN_WHATSAPP = "201113397879";
 
   const handleInputChange = (field: string, value: string) => {
     setOrderData(prev => ({ ...prev, [field]: value }));
