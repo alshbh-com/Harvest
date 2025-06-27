@@ -17,8 +17,8 @@ const BottomNavigation = () => {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 shadow-lg z-50">
-      <div className="flex justify-around items-center max-w-md mx-auto">
+    <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-600 shadow-2xl z-50 rounded-t-3xl mx-2 mb-2">
+      <div className="flex justify-around items-center max-w-md mx-auto py-3 px-2">
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
           const Icon = item.icon;
@@ -28,25 +28,32 @@ const BottomNavigation = () => {
               key={item.path}
               onClick={() => navigate(item.path)}
               variant="ghost"
-              className={`flex flex-col items-center gap-1 p-2 h-auto min-w-0 ${
-                isActive ? 'text-blue-600' : 'text-gray-500'
+              className={`flex flex-col items-center gap-1 p-3 h-auto min-w-0 rounded-2xl transition-all duration-300 ${
+                isActive 
+                  ? 'bg-white/20 text-white shadow-lg scale-110 backdrop-blur-sm' 
+                  : 'text-white/80 hover:text-white hover:bg-white/10'
               }`}
             >
               <div className="relative">
-                <Icon className={`w-6 h-6 ${isActive ? 'text-blue-600' : 'text-gray-500'}`} />
+                <Icon className={`w-6 h-6 ${isActive ? 'text-white' : 'text-white/80'}`} />
                 {item.badge && item.badge > 0 && (
-                  <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center text-xs bg-red-500 text-white">
+                  <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center text-xs bg-red-500 text-white border-2 border-white animate-pulse">
                     {item.badge}
                   </Badge>
                 )}
               </div>
-              <span className={`text-xs ${isActive ? 'text-blue-600 font-semibold' : 'text-gray-500'}`}>
+              <span className={`text-xs font-medium ${
+                isActive ? 'text-white' : 'text-white/80'
+              }`}>
                 {item.label}
               </span>
             </Button>
           );
         })}
       </div>
+      
+      {/* Gradient overlay for extra visual appeal */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent rounded-t-3xl pointer-events-none"></div>
     </div>
   );
 };

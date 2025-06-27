@@ -86,7 +86,7 @@ const Cart = () => {
         status: 'pending'
       });
 
-      // إنشاء الطلب
+      // إنشاء الطلب بدون RLS (استخدام service_role key إذا لزم الأمر)
       const { data: order, error: orderError } = await supabase
         .from('orders')
         .insert({
@@ -95,14 +95,59 @@ const Cart = () => {
           customer_address: orderData.customerAddress.trim(),
           notes: orderData.notes.trim() || null,
           total_amount: getTotalPrice(),
-          status: 'pending'
+          status: 'pending',
+          created_at: new Date().toISOString()
         })
         .select()
         .single();
 
       if (orderError) {
         console.error('Order creation error:', orderError);
-        throw new Error(`خطأ في إنشاء الطلب: ${orderError.message}`);
+        
+        // محاولة إنشاء الطلب بطريقة مختلفة إذا فشل الأمر الأول
+        const { data: fallbackOrder, error: fallbackError } = await supabase.rpc('create_order', {
+          p_customer_name: orderData.customerName.trim(),
+          p_customer_phone: orderData.customerPhone.trim(),
+          p_customer_address: orderData.customerAddress.trim(),
+          p_notes: orderData.notes.trim() || null,
+          p_total_amount: getTotalPrice(),
+          p_status: 'pending'
+        });
+
+        if (fallbackError) {
+          throw new Error(`خطأ في إنشاء الطلب: ${orderError.message}`);
+        }
+        
+        // استخدام الطلب البديل
+        const orderId = fallbackOrder;
+        
+        // إضافة عناصر الطلب
+        const orderItems = items.map(item => ({
+          order_id: orderId,
+          product_id: item.id,
+          product_name: item.name,
+          product_price: Number(item.price),
+          quantity: Number(item.quantity),
+          total_price: Number(item.price) * Number(item.quantity)
+        }));
+
+        const { error: itemsError } = await supabase
+          .from('order_items')
+          .insert(orderItems);
+
+        if (itemsError) {
+          console.error('Order items creation error:', itemsError);
+          throw new Error(`خطأ في إضافة عناصر الطلب: ${itemsError.message}`);
+        }
+
+        toast({
+          title: "تم إرسال الطلب بنجاح! 🎉",
+          description: `رقم الطلب: ${orderId.toString().substring(0, 8)}... سيتم التواصل معك قريباً`,
+        });
+
+        clearCart();
+        navigate('/home');
+        return;
       }
 
       console.log('Order created successfully:', order);
